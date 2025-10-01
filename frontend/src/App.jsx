@@ -14,8 +14,9 @@ import AccountantDashboard from './pages/dashboard/Accountant/AccountantDashboar
 import UserDashboard from './pages/dashboard/User/UserDashboard';
 import AnalyticsDashboard from './pages/dashboard/Admin/AnalyticsDashboard';
 import MyProjects from './pages/dashboard/User/MyProjects';
+import ForgotPasswordPage from './pages/public/ForgotPasswordPage';
+import ResetPasswordPage from './pages/public/ResetPasswordPage';
 
-// Import other dashboards as they are created
 
 // A component to handle default redirection after login
 const DashboardRedirect = () => {
@@ -43,6 +44,8 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />}
 
             <Route element={<ProtectedRoute />}>
                 {/* Protected Routes (add a ProtectedRoute component wrapper later) */}

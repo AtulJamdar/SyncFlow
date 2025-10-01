@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../../store/useAuthStore';
 import apiClient from '../../api';
 
@@ -65,6 +65,14 @@ const LoginPage = () => {
                             required
                         />
                     </div>
+
+                    {/* --- ADD THIS FORGOT PASSWORD LINK --- */}
+                    <div className="text-right mb-6">
+                        <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                            Forgot Password?
+                        </Link>
+                    </div>
+
                     <button
                         type="submit"
                         disabled={mutation.isPending}
@@ -73,6 +81,14 @@ const LoginPage = () => {
                         {mutation.isPending ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
+
+                {/* --- ADD THIS REGISTER LINK --- */}
+                <p className="mt-6 text-sm text-center text-gray-600 dark:text-gray-400">
+                    Don't have an account?{' '}
+                    <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                        Register here
+                    </Link>
+                </p>
             </div>
         </div>
     );

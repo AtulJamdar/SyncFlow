@@ -1,46 +1,78 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     password: { type: String, required: true },
     role: {
-        type: String,
-        enum: ['admin', 'owner', 'manager', 'accountant', 'user'],
-        default: 'user',
+      type: String,
+      enum: ["admin", "owner", "manager", "accountant", "user"],
+      default: "user",
     },
     specialization: { type: String },
     refreshToken: { type: String },
-}, { timestamps: true });
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+  },
+  { timestamps: true }
+);
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
 // Method to compare passwords
-userSchema.methods.isPasswordCorrect = async function(password) {
-    return await bcrypt.compare(password, this.password);
+userSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 // Method to generate access token
-userSchema.methods.generateAccessToken = function() {
-    return jwt.sign({ _id: this._id, email: this.email, role: this.role },
-        process.env.JWT_SECRET, { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION || "1d"}
-    );
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    { _id: this._id, email: this.email, role: this.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRATION || "1d" }
+  );
 };
 
 // Method to generate refresh token
-userSchema.methods.generateRefreshToken = function() {
-    return jwt.sign({ _id: this._id },
-        process.env.JWT_SECRET, // Using the same secret for simplicity, can be different
-        { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION }
-    );
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    { _id: this._id },
+    process.env.JWT_SECRET, // Using the same secret for simplicity, can be different
+    { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION }
+  );
 };
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.createPasswordResetToken = function () {
+  // 1. Create a random, unhashed token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // 2. Hash the token before saving to the database (for security)
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // 3. Set an expiration time (e.g., 10 minutes)
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  // 4. Return the unhashed token to be sent via email
+  return resetToken;
+};
+
+const User = mongoose.model("User", userSchema);
 export default User;
