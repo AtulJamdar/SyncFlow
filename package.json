@@ -1,0 +1,21 @@
+{
+    "name": "syncflow",
+    "version": "1.0.0",
+    "private": true,
+    "description": "A multi-tenant SaaS platform for managing clients, projects, and invoices.",
+    "scripts": {
+        "install:all": "npm install && npm install --workspaces",
+        "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+        "seed": "npm run seed --workspace=backend",
+        "build:frontend": "npm run build --workspace=frontend"
+    },
+    "workspaces": [
+        "backend",
+        "frontend"
+    ],
+    "author": "Your Name",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
