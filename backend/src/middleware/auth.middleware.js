@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { ApiError } from "../utils/apiError.js";
 
 export const authMiddleware = async (req, res, next) => {
+  console.log(req.headers);
   try {
     const token =
       req.cookies?.accessToken ||

@@ -13,10 +13,4 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-apiClient.get("/api/protected", {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-});
-
 export default apiClient;
