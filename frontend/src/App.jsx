@@ -17,7 +17,7 @@ import ManageInvoices from './pages/dashboard/Admin/ManageInvoices';
 import AnalyticsDashboard from './pages/dashboard/Admin/AnalyticsDashboard';
 import ForgotPasswordPage from './pages/public/ForgotPasswordPage';
 import ResetPasswordPage from './pages/public/ResetPasswordPage';
-import { useAuthStore } from './stores/authStore'; // assuming you have this
+import { useAuthStore } from './store/useAuthStore'; // assuming you have this
 
 // Default redirection after login
 const DashboardRedirect = () => {
