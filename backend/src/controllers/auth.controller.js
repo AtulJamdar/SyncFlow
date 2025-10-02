@@ -125,6 +125,7 @@ export const forgotPassword = async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
+    console.error("Email send error:", err);
     return next(
       new ApiError(
         500,
