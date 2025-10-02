@@ -41,6 +41,10 @@ app.use(express.json()); // must be enabled
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.send("SyncFlow backend is live!");
+});
+
 // --- API Routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/clients", clientRoutes);
