@@ -37,7 +37,7 @@ app.use(
   })
 );
 
-app.use(express.json()); // must be enabled
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -64,6 +64,14 @@ app.use("/api/events", eventRoutes);
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 // });
+
+app.options(
+  "*",
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
