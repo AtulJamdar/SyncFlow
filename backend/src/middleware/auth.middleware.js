@@ -50,6 +50,8 @@ export const authMiddleware = async (req, res, next) => {
       );
     }
 
+    console.log("Received token:", token);
+
     // 2️⃣ Verify token
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
