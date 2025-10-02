@@ -14,6 +14,7 @@ const ForgotPasswordPage = () => {
             setMessage("If an account with that email exists, a password reset link has been sent. Please check your inbox.");
         },
         onError: (error) => toast.error(error.response?.data?.message || 'An error occurred'),
+
     });
 
     const handleSubmit = (e) => {
