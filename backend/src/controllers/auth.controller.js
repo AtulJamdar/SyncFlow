@@ -133,7 +133,6 @@ export const forgotPassword = async (req, res, next) => {
       )
     );
   }
-  console.error("Email send error:", err);
 };
 
 export const resetPassword = async (req, res, next) => {
