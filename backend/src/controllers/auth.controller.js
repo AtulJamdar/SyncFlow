@@ -3,7 +3,6 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import User from "../models/user.model.js";
 import sendEmail from "../utils/resendEmail.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
