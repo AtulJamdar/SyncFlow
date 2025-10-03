@@ -14,6 +14,6 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(authMiddleware, logoutUser);
 router.post("/forgot-password", forgotPassword);
-router.patch("/reset-password/:token", resetPassword);
+router.post("/reset-password/:token", resetPassword);
 
 export default router;

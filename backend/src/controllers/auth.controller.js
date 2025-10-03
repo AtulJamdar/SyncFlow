@@ -1,8 +1,10 @@
 import User from "../models/User.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
-import crypto from "crypto";
-import sendEmail from "../utils/email.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import User from "../models/user.model.js";
+import sendEmail from "../utils/resendEmail.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   const user = await User.findById(userId);
@@ -98,69 +100,62 @@ export const logoutUser = async (req, res, next) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 };
 
-export const forgotPassword = async (req, res, next) => {
-  // 1. Get user based on posted email
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    return next(new ApiError(404, "There is no user with that email address."));
-  }
+// Generate reset token (JWT)
+const generateResetToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: "15m", // reset link valid for 15 minutes
+  });
+};
 
-  // 2. Generate the random reset token
-  const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
-
-  // 3. Send it to user's email
+// 👉 Forgot Password
+export const forgotPassword = async (req, res) => {
   try {
-    const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
-    const message = `Forgot your password? Submit a PATCH request with your new password to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
-    await sendEmail({
-      email: user.email,
-      subject: "Your password reset token (valid for 10 min)",
-      message,
-    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    res.status(200).json(new ApiResponse(200, null, "Token sent to email!"));
-  } catch (err) {
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
-    await user.save({ validateBeforeSave: false });
-    console.error("Email send error:", err);
-    return next(
-      new ApiError(
-        500,
-        "There was an error sending the email. Try again later."
-      )
-    );
+    const resetToken = generateResetToken(user._id);
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+    const subject = "Password Reset Request";
+    const message = `Click the link below to reset your password:\n\n${resetUrl}\n\nThis link is valid for 15 minutes.`;
+
+    await sendEmail({ email: user.email, subject, message });
+
+    res.json({ message: "Password reset link sent to your email" });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-export const resetPassword = async (req, res, next) => {
-  // 1. Get user based on the token
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
+// 👉 Reset Password
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: { $gt: Date.now() },
-  });
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  // 2. If token has not expired, and there is a user, set the new password
-  if (!user) {
-    return next(new ApiError(400, "Token is invalid or has expired"));
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(400).json({ message: "Invalid or expired token" });
   }
-  user.password = req.body.password;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-  await user.save();
-
-  // 3. Log the user in, send JWT
-  // You can re-use the login logic here to send back tokens
-  res
-    .status(200)
-    .json(
-      new ApiResponse(200, null, "Password reset successfully. Please log in.")
-    );
 };
