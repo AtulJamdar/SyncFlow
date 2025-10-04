@@ -144,7 +144,7 @@ export const resetPassword = async (req, res) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded.id);
+    const user = await User.findById(decoded._id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
