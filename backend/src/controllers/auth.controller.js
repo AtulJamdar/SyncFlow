@@ -118,7 +118,7 @@ export const forgotPassword = async (req, res) => {
 
     const resetToken = generateResetToken(user._id);
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
     const subject = "Password Reset Request";
     const message =
