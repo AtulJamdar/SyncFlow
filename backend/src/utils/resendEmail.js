@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendEmail = async ({ email, subject, message }) => {
   try {
     await resend.emails.send({
-      from: "Website <website@resend.dev>", //"syncflowforyou@syncflow.com",
+      from: "SyncFlow <website@resend.dev>", //"syncflowforyou@syncflow.com",
       to: email,
       subject,
       text: message,
