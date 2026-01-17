@@ -1,30 +1,45 @@
-# SyncFlow - Project Management SaaS
+# 🟣 SyncFlow — Project Management Platform
 
-SyncFlow is a multi-tenant, role-based SaaS platform for managing clients, projects, and invoices, designed for small to medium-sized agencies and freelancers.
+SyncFlow is a full-stack **MERN-based project management application** built for freelancers and small teams to plan, track, and collaborate on projects efficiently.
 
-## Tech Stack
-
-- **Frontend**: React, Vite, TailwindCSS, TanStack Query, Zustand, Recharts
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose
-- **Authentication**: JWT (Access + Refresh Tokens in HTTP-only cookies)
-- **Real-Time**: Server-Sent Events (SSE)
+🔗 **Live Demo:** https://syncflow.onrender.com/  
+🛠️ **GitHub Repo:** https://github.com/AtulJamdar/SyncFlow
 
 ---
 
-## Getting Started
+## ✨ Features
+- 🔐 JWT-based authentication (Login / Signup)
+- 📊 Project and task dashboards
+- ⏱️ Task creation, updates, and progress tracking
+- 🔔 Real-time notifications using Server-Sent Events (SSE)
+- 👥 Role-based access control
+- 📱 Fully responsive UI
 
-### 1. Prerequisites
+---
 
-- Node.js (v18 or later)
-- MongoDB (A local instance or a cloud-based one like MongoDB Atlas)
-- npm (v9 or later)
+## 🔧 Tech Stack
+| Technology | Purpose |
+|---------|---------|
+| MongoDB | Database |
+| Express.js | Backend APIs |
+| React.js | Frontend UI |
+| Node.js | Server runtime |
+| JWT | Authentication |
+| CSS3 | Styling |
 
-### 2. Installation
+---
 
-Clone the repository and install all dependencies using the root `install:all` script.
+## 🚀 What I Learned
+- Building secure REST APIs
+- Implementing real-time features (SSE)
+- Structuring scalable MERN applications
+- Managing React state and component flow
 
+---
+
+## 📂 Run Locally
 ```bash
-git clone <your-repo-url>
-cd syncflow
-npm run install:all
+git clone https://github.com/AtulJamdar/SyncFlow.git
+cd SyncFlow
+npm install
+npm start
