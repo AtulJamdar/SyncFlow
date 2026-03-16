@@ -27,7 +27,7 @@ SyncFlow is a full-stack **MERN-based project management application** built for
 | JWT | Authentication |
 | CSS3 | Styling |
 
----
+----
 
 ## 🚀 What I Learned
 - Building secure REST APIs
