@@ -15,7 +15,7 @@ SyncFlow is a full-stack **MERN-based project management application** built for
 - 👥 Role-based access control
 - 📱 Fully responsive UI
 
----
+----
 
 ## 🔧 Tech Stack
 | Technology | Purpose |
