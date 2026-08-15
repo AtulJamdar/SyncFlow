@@ -43,3 +43,6 @@ git clone https://github.com/AtulJamdar/SyncFlow.git
 cd SyncFlow
 npm install
 npm start
+
+
+done
